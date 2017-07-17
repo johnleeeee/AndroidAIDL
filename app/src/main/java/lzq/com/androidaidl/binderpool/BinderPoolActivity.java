@@ -26,19 +26,21 @@ public class BinderPoolActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 doWrok();
             }
         }).start();
-
-
     }
 
     private void doWrok(){
+
         BinderPool binderPool = BinderPool.getInstance(BinderPoolActivity.this);
+
         IBinder securityBinder = binderPool.queryBinder(BinderPool.BINDER_SERCURITY_CENTER);
+
         mSecurityCenter = SecurityCenterImpl.asInterface(securityBinder);
 
         String msg = "hello world-安卓";

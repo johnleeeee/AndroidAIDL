@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 public class BinderPoolService extends Service{
 
     private static final String TAG = "BinderPoolService";
+    //服务端通过binder池的实例得到对应的binder
     private Binder mBinderPool = new BinderPool.BinderPooImpl();
 
     @Override

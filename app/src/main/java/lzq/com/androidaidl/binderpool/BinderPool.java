@@ -30,7 +30,7 @@ public class BinderPool {
         this.context = context;
         connectionBinderPoolService();
     }
-
+    //单例模式
     public static BinderPool getInstance(Context context){
         if(sInstance == null){
             synchronized (BinderPool.class){
@@ -42,12 +42,14 @@ public class BinderPool {
         }
         return sInstance;
     }
-
+    //连接服务端必须实现的对象方法
     private ServiceConnection mBinderPoolConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            //接收到服务端返回的对应的IBider对象
             mBinderPool = IBinderPool.Stub.asInterface(service);
             try {
+                //连接死亡代理
                 mBinderPool.asBinder().linkToDeath(mBinderPoolDeathRecipient,0);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -60,7 +62,7 @@ public class BinderPool {
 
         }
     };
-
+    //创建死亡代理
     private IBinder.DeathRecipient mBinderPoolDeathRecipient = new IBinder.DeathRecipient() {
         @Override
         public void binderDied() {
@@ -69,7 +71,7 @@ public class BinderPool {
             connectionBinderPoolService();
         }
     };
-
+    //连接服务端
     public synchronized void connectionBinderPoolService(){
         mConnectionBinderPoolCountDownLatch = new CountDownLatch(1);
         Intent service = new Intent(context, BinderPoolService.class);
@@ -80,7 +82,7 @@ public class BinderPool {
             e.printStackTrace();
         }
     }
-
+    //根据传入的binderCode生成对应的binder，
     public static class BinderPooImpl extends IBinderPool.Stub{
 
         public BinderPooImpl(){
